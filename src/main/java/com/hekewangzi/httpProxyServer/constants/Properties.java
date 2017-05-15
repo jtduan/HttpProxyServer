@@ -22,7 +22,15 @@ public class Properties {
 	/**
 	 * 服务端监听端口
 	 */
-	public final static int ListenerPort = 6666;
+	public final static int ServerPort = 6666;
+
+	/*
+	 * 代理服务器相关配置
+	 */
+	/**
+	 * 服务端监听端口
+	 */
+	public final static String ServerIP = "127.0.0.1";
 
 	/*
 	 * 服务器相关配置(各个要访问的服务器)

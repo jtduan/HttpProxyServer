@@ -7,7 +7,6 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hekewangzi.httpProxyServer.constants.Properties;
 import com.hekewangzi.httpProxyServer.threadPools.ThreadPoolManager;
 import com.hekewangzi.httpProxyServer.threads.HttpProxyThread;
 
@@ -17,8 +16,8 @@ import com.hekewangzi.httpProxyServer.threads.HttpProxyThread;
  * @author qq
  * 
  */
-public class HttpProxyServerMain {
-	private final static Logger log = LoggerFactory.getLogger(HttpProxyServerMain.class);
+public class HttpProxyClientMain {
+	private final static Logger log = LoggerFactory.getLogger(HttpProxyClientMain.class);
 
 	/**
 	 * 服务端Socket
@@ -31,13 +30,13 @@ public class HttpProxyServerMain {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new HttpProxyServerMain().init();
+		new HttpProxyClientMain().init();
 
 		try {
 			while (true) {
 				Socket clientSocket = serverSocket.accept();
 				// 每当客户端连接后启动一条线程为该客户端服务
-				ThreadPoolManager.execute(new HttpProxyThread(clientSocket,false));
+				ThreadPoolManager.execute(new HttpProxyThread(clientSocket,true));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -64,7 +63,7 @@ public class HttpProxyServerMain {
 		log.info("ServerSocket初始化开始...");
 
 		try {
-			serverSocket = new ServerSocket(Properties.ServerPort);
+			serverSocket = new ServerSocket(8888);
 
 			log.info("绑定IP：{}", serverSocket.getInetAddress().getHostAddress());
 			log.info("绑定端口：{}", serverSocket.getLocalPort());

@@ -14,6 +14,7 @@ import com.hekewangzi.httpProxyServer.httpMessage.HttpRequestMessage;
 import com.hekewangzi.httpProxyServer.httpMessage.exception.BuildHttpMessageError;
 import com.hekewangzi.httpProxyServer.httpMessage.exception.ConnectServerError;
 import com.hekewangzi.httpProxyServer.httpMessage.startLine.RequestStartLine;
+import com.hekewangzi.httpProxyServer.proxy.ClientProxy;
 import com.hekewangzi.httpProxyServer.proxy.Proxy;
 import com.hekewangzi.httpProxyServer.proxy.ServerProxy;
 import com.hekewangzi.httpProxyServer.utils.SocketUtil;
@@ -48,15 +49,23 @@ public class HttpProxyThread extends Thread {
 	 */
 	private Socket serverSocket;
 
+	/**
+	 * 启动模式
+	 * 1: 客户端模式，用于二级代理
+	 * 0: 服务器模式, 直接连接待访问的URL
+	 */
+	private boolean clientMode;
+
 	/*
 	 * constructor
 	 */
 	private HttpProxyThread() {
 	}
 
-	public HttpProxyThread(Socket clientSocket) {
+	public HttpProxyThread(Socket clientSocket,boolean clientMode) {
 		super();
 		this.clientSocket = clientSocket;
+		this.clientMode = clientMode;
 		try {
 			this.clientInputStream = clientSocket.getInputStream();
 		} catch (IOException e) {
@@ -78,7 +87,6 @@ public class HttpProxyThread extends Thread {
 			SocketUtil.closeSocket(clientSocket, serverSocket);
 			return;
 		}
-		requestMessage = (HttpRequestMessage) requestMessage.decryptHttpMessage(); // 解密
 
 		// 请求方法
 		RequestMethod httpRequestMethod = ((RequestStartLine) requestMessage.getStartLine()).getMethod();
@@ -106,7 +114,11 @@ public class HttpProxyThread extends Thread {
 		 * 
 		 */
 		try {
-			this.serverSocket = SocketUtil.connectServer(host, port, Properties.ServerConnectTimeout);
+			if(this.clientMode){
+				this.serverSocket = SocketUtil.connectServer(Properties.ServerIP, Properties.ServerPort, Properties.ServerConnectTimeout);
+			}else {
+				this.serverSocket = SocketUtil.connectServer(host, port, Properties.ServerConnectTimeout);
+			}
 		} catch (ConnectServerError e) {
 			e.printStackTrace();
 
@@ -126,7 +138,12 @@ public class HttpProxyThread extends Thread {
 		/*
 		 * 转发流量
 		 */
-		Proxy proxy = new ServerProxy(clientSocket, serverSocket, requestMessage);
+		Proxy proxy;
+		if(clientMode) {
+			proxy = new ClientProxy(clientSocket, serverSocket, requestMessage);
+		}else{
+			proxy = new ServerProxy(clientSocket, serverSocket, requestMessage);
+		}
 		proxy.proxy();
 	}
 

@@ -21,7 +21,7 @@ public class ClientProxy extends Proxy {
 		/*
 		 * 将客户端数据发给服务端
 		 */
-		if (!SocketUtil.writeSocket(super.serverOutputStream, requestMessage, super.isEncryptRequest())) {
+		if (!SocketUtil.writeSocket(super.serverOutputStream, requestMessage)) {
 			return;
 		}
 

@@ -1,8 +1,6 @@
 package com.hekewangzi.httpProxyServer.httpMessage;
 
 import java.io.InputStream;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +9,6 @@ import com.hekewangzi.httpProxyServer.constants.HttpResponseStatus;
 import com.hekewangzi.httpProxyServer.httpMessage.exception.BuildHttpMessageError;
 import com.hekewangzi.httpProxyServer.httpMessage.startLine.ResponseStartLine;
 import com.hekewangzi.httpProxyServer.httpMessage.startLine.StartLine;
-import com.hekewangzi.httpProxyServer.utils.PasswordUtils;
 
 /**
  * Http响应报文
@@ -92,44 +89,6 @@ public class HttpResponseMessage extends HttpMessage {
 		// return false;
 		// }
 		return true;
-	}
-
-	/**
-	 * 加密响应报文
-	 * 
-	 * @return
-	 */
-	@Override
-	public HttpMessage encryptHttpMessage() {
-		/*
-		 * 加密头部
-		 */
-		if (!super.headerIsEmpty()) {
-			Set<Entry<String, String>> entrys = super.getHeaders().entrySet();
-			for (Entry<String, String> entry : entrys) {
-				super.addHeader(entry.getKey(), PasswordUtils.base64Encrypt(entry.getValue()));
-			}
-		}
-		return this;
-	}
-
-	/**
-	 * 解密响应报文
-	 * 
-	 * @return
-	 */
-	@Override
-	public HttpMessage decryptHttpMessage() {
-		/*
-		 * 解密头部
-		 */
-		if (!super.headerIsEmpty()) {
-			Set<Entry<String, String>> entrys = super.getHeaders().entrySet();
-			for (Entry<String, String> entry : entrys) {
-				super.addHeader(entry.getKey(), PasswordUtils.base64Decrypt(entry.getValue()));
-			}
-		}
-		return this;
 	}
 
 }

@@ -1,5 +1,8 @@
 # HttpProxyServer
-Http/Https代理服务器服务端
+Http/Https代理服务器
+直接服务器上运行HttpProxyServer即可实现代理，若需代理Google、Youtube等网站，运行HttpProxyServer的服务器要能访问这些网站，香港或国外的服务器都可以
+可以动态修改HTTP的内容
 
-先在服务器上运行HttpProxyServer，再在你的电脑上运行HttpProxyClient即可实现代理 
-若需代理Google、Youtube等网站，运行HttpProxyServer的服务器要能访问这些网站，香港或国外的服务器都可以
+# HttpProxyClient
+HttpProxyClient可以单独使用，也可以多个HttpProxyClient进行级联（可能需要修改转发的IP和端口），类似于阿布云的云代理效果
+

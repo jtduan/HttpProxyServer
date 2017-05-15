@@ -26,7 +26,7 @@ public class ServerProxy extends Proxy {
 		 */
 		HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpResponseStatus._200);
 		httpResponseMessage.addHeader("Connection", "close");
-		SocketUtil.writeSocket(super.clientOutputStream, httpResponseMessage, super.isEncryptResponse());
+		SocketUtil.writeSocket(super.clientOutputStream, httpResponseMessage);
 
 		super.proxyHttps();
 	}

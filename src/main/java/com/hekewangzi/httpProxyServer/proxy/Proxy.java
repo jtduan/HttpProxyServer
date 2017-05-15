@@ -42,21 +42,6 @@ public class Proxy {
 	 */
 	protected boolean enabledKeepAlive = false;
 
-	/**
-	 * 转发时是否加密请求(默认: 不加密)
-	 */
-	private boolean encryptRequest = false;
-
-	/**
-	 * 转发时是否加密响应(默认: 不加密)
-	 */
-	private boolean encryptResponse = false;
-
-	/**
-	 * 接收响应时是否解密响应(默认: 不解密)
-	 */
-	private boolean decryptResponse = false;
-
 	/*
 	 * 客户端相关
 	 */
@@ -173,13 +158,12 @@ public class Proxy {
 	 * 
 	 * 3、关闭客户端Socket、关闭服务端Socket
 	 * 
-	 * @param requestMessage
 	 */
 	public void proxyHttp() {
 		/*
 		 * 将客户端数据发给服务端
 		 */
-		if (!SocketUtil.writeSocket(serverOutputStream, requestMessage, this.encryptRequest)) {
+		if (!SocketUtil.writeSocket(serverOutputStream, requestMessage)) {
 			return;
 		}
 
@@ -193,11 +177,8 @@ public class Proxy {
 			e.printStackTrace();
 			return;
 		}
-		if (this.decryptResponse) {
-			responseMessage.decryptHttpMessage();
-		}
 
-		if (!SocketUtil.writeSocket(clientOutputStream, responseMessage, this.encryptResponse)) {
+		if (!SocketUtil.writeSocket(clientOutputStream, responseMessage)) {
 			return;
 		}
 
@@ -254,29 +235,4 @@ public class Proxy {
 	public void setEnabledKeepAlive(boolean enabledKeepAlive) {
 		this.enabledKeepAlive = enabledKeepAlive;
 	}
-
-	public boolean isEncryptRequest() {
-		return encryptRequest;
-	}
-
-	public void setEncryptRequest(boolean encryptRequest) {
-		this.encryptRequest = encryptRequest;
-	}
-
-	public boolean isEncryptResponse() {
-		return encryptResponse;
-	}
-
-	public void setEncryptResponse(boolean encryptResponse) {
-		this.encryptResponse = encryptResponse;
-	}
-
-	public boolean isDecryptResponse() {
-		return decryptResponse;
-	}
-
-	public void setDecryptResponse(boolean decryptResponse) {
-		this.decryptResponse = decryptResponse;
-	}
-
 }

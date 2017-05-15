@@ -83,14 +83,9 @@ public class SocketUtil {
 	 * 
 	 * @param outputStream
 	 * @param httpMessage
-	 * @param encrypt
-	 *            是否加密(true: 加密)
 	 * @return
 	 */
-	public static boolean writeSocket(OutputStream outputStream, HttpMessage httpMessage, boolean encrypt) {
-		if (encrypt) {
-			httpMessage.encryptHttpMessage();
-		}
+	public static boolean writeSocket(OutputStream outputStream, HttpMessage httpMessage) {
 		return writeSocket(outputStream, httpMessage.toString());
 	}
 
